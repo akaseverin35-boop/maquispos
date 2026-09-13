@@ -1,0 +1,20 @@
+{
+  "name": "maquispos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MaquisPOS — logiciel de gestion complet pour maquis, bar et restaurant",
+  "workspaces": ["server", "client"],
+  "scripts": {
+    "dev": "concurrently -n API,WEB -c cyan,magenta \"npm run dev -w server\" \"npm run dev -w client\"",
+    "build": "npm run build -w client",
+    "start": "npm run start -w server",
+    "seed": "npm run seed -w server",
+    "reset": "npm run reset -w server",
+    "typecheck": "npm run typecheck -w client",
+    "lint": "npm run typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": { "node": ">=20" }
+}
