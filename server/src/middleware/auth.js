@@ -4,35 +4,48 @@ import { db } from '../lib/db.js';
 const SECRET = process.env.JWT_SECRET || 'change-moi-en-production';
 export const EXPIRES_IN = process.env.JWT_EXPIRES_IN || '12h';
 
-export function signToken(user) {
-  return jwt.sign({ sub: user.id, role: user.role }, SECRET, { expiresIn: EXPIRES_IN });
+const CHAMPS_PUBLICS = `e.id, e.nom_complet, e.identifiant, e.role, e.telephone,
+                        e.point_vente_id, e.actif, pv.nom AS point_vente_nom`;
+
+export function signerJeton(employe) {
+  return jwt.sign({ sub: employe.id, role: employe.role }, SECRET, { expiresIn: EXPIRES_IN });
 }
 
-export function authenticate(req, res, next) {
+export function chargerEmploye(id) {
+  return db
+    .prepare(
+      `SELECT ${CHAMPS_PUBLICS} FROM employes e
+         LEFT JOIN points_vente pv ON pv.id = e.point_vente_id
+        WHERE e.id = ?`,
+    )
+    .get(id);
+}
+
+export function authentifier(req, res, next) {
   const header = req.headers.authorization || '';
-  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
-  if (!token) return res.status(401).json({ error: 'Authentification requise' });
+  const jeton = header.startsWith('Bearer ') ? header.slice(7) : null;
+  if (!jeton) return res.status(401).json({ error: 'Connexion requise' });
 
   let payload;
   try {
-    payload = jwt.verify(token, SECRET);
+    payload = jwt.verify(jeton, SECRET);
   } catch {
     return res.status(401).json({ error: 'Session expirée, reconnectez-vous' });
   }
 
-  const user = db
-    .prepare('SELECT id, full_name, username, role, phone, active FROM users WHERE id = ?')
-    .get(payload.sub);
-  if (!user || !user.active) return res.status(401).json({ error: 'Compte introuvable ou désactivé' });
+  const employe = chargerEmploye(payload.sub);
+  if (!employe || !employe.actif) {
+    return res.status(401).json({ error: 'Compte introuvable ou désactivé' });
+  }
 
-  req.user = user;
+  req.employe = employe;
   next();
 }
 
-/** Restreint une route à une liste de rôles. `admin` passe partout. */
-export function requireRole(...roles) {
+/** Restreint une route à certains rôles. Le rôle « admin » passe partout. */
+export function exigerRole(...roles) {
   return (req, res, next) => {
-    if (req.user.role === 'admin' || roles.includes(req.user.role)) return next();
+    if (req.employe.role === 'admin' || roles.includes(req.employe.role)) return next();
     res.status(403).json({ error: "Vous n'avez pas les droits pour cette action" });
   };
 }

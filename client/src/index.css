@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-slate-100 text-slate-800 antialiased;
+    font-family: ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+  /* La caisse se manipule au doigt : pas de zoom involontaire sur iOS. */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+@layer components {
+  .champ {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none
+           transition focus:border-gesta-500 focus:ring-2 focus:ring-gesta-100
+           disabled:bg-slate-100 disabled:text-slate-400;
+  }
+  .etiquette {
+    @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500;
+  }
+  .bouton {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold
+           transition disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .bouton-principal {
+    @apply bouton bg-gesta-600 text-white hover:bg-gesta-700 active:bg-gesta-800;
+  }
+  .bouton-secondaire {
+    @apply bouton border border-slate-300 bg-white text-slate-700 hover:bg-slate-50;
+  }
+  .bouton-danger {
+    @apply bouton bg-red-600 text-white hover:bg-red-700;
+  }
+  .carte {
+    @apply rounded-xl border border-slate-200 bg-white shadow-sm;
+  }
+  .puce {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold;
+  }
+}
+
+/* Le reçu s'imprime seul, sans la navigation ni les boutons. */
+@media print {
+  .sans-impression {
+    display: none !important;
+  }
+  .zone-impression {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+  }
+  body {
+    background: white;
+  }
+}
