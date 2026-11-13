@@ -1,0 +1,19 @@
+[project]
+name = "gta-pointage"
+version = "1.0.0"
+description = "Lecture des pointeuses biométriques ZKTeco, gestion des temps et préparation de la paie"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+excel = ["openpyxl>=3.1"]
+
+[project.scripts]
+gta = "gta.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["gta", "gta.zk"]

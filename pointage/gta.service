@@ -1,0 +1,13 @@
+# Service Linux (systemd) : sudo cp gta.service /etc/systemd/system/ && sudo systemctl enable --now gta
+[Unit]
+Description=GTA - écoute des pointeuses biométriques
+After=network-online.target
+
+[Service]
+WorkingDirectory=/opt/gta
+ExecStart=/usr/bin/python3 -m gta direct --adms 8081
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

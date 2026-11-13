@@ -8,6 +8,12 @@ Contrairement à Gesta+ qui se compose de deux applications mobiles séparées
 (*Gesta+ POS* et *Gesta+ Tableau de bord*), cette version réunit la caisse et le tableau
 de bord dans une seule application web utilisable au téléphone comme au PC.
 
+## Pointage biométrique et paie
+
+Le dossier [`pointage/`](pointage/README.md) contient un logiciel séparé, en Python, qui lit
+directement les pointeuses biométriques ZKTeco (réseau, mode ADMS ou clé USB), calcule les
+présences, retards et heures supplémentaires, puis prépare la paie avec export Excel.
+
 ## Démarrage
 
 ```bash

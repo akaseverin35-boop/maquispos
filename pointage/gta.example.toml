@@ -1,0 +1,55 @@
+# Configuration GTA — copiez ce fichier en gta.toml (python -m gta init le fait pour vous).
+# Les valeurs par défaut suivent le Code du travail ivoirien. Faites valider les taux
+# de cotisation et le barème d'impôt par votre comptable avant la première paie réelle.
+
+entreprise = "Mon entreprise"
+devise = "FCFA"
+base_de_donnees = "gta.db"
+arrondi = 0                      # nombre de décimales des montants
+
+[temps]
+heures_semaine = 40              # durée légale hebdomadaire
+heures_mois = 173.33             # 40 h × 52 / 12 : sert au taux horaire des mensuels
+doublon_minutes = 2              # deux passages à moins de 2 min = un seul pointage
+decalage_journee_h = 4           # la journée commence 4 h avant l'heure d'embauche (postes de nuit)
+utiliser_etat_pointeuse = false  # true si les employés appuient sur Entrée/Sortie avant de pointer
+
+[majorations]
+nuit_debut = "21:00"
+nuit_fin = "05:00"
+taux_hs_nuit = 0.75              # heures sup. de nuit : +75 %
+taux_dimanche_ferie = 0.75       # heures de jour le dimanche ou un jour férié : +75 %
+taux_dimanche_ferie_nuit = 1.00  # la nuit le dimanche ou un jour férié : +100 %
+jour_repos = 7                   # 7 = dimanche
+prime_nuit_heures_normales = 0.0 # majoration éventuelle des heures normales de nuit (convention)
+
+# Heures supplémentaires au-delà de heures_semaine, par tranches successives
+tranches_hs = [
+    { heures = 6, taux = 0.15 }, # de la 41e à la 46e heure : +15 %
+    { taux = 0.50 },             # au-delà : +50 %
+]
+
+[paie]
+deduire_absences = true          # retenir les absences injustifiées sur le salaire mensuel
+deduire_retards = false          # retenir les minutes de retard
+transport_non_imposable = true
+
+# Cotisations salariales : taux appliqué à l'assiette (imposable ou brut), avec plafond éventuel
+[[retenues]]
+nom = "CNPS retraite (part salariale)"
+taux = 0.063
+base = "imposable"           # hors indemnité de transport non imposable
+plafond = 3375000                # 45 × SMIG — à vérifier
+
+# Barème progressif mensuel de l'impôt sur salaire : [seuil, taux] — à compléter puis activer
+[bareme]
+actif = false
+nom = "ITS"
+tranches = [
+    [0, 0.0],
+    [75000, 0.16],
+    [240000, 0.21],
+    [800000, 0.24],
+    [2400000, 0.28],
+    [8000000, 0.32],
+]
