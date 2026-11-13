@@ -7,3 +7,10 @@ server/data/*.db-journal
 server/data/*.db-wal
 server/data/*.db-shm
 .DS_Store
+
+# Logiciel de pointage (pointage/)
+pointage/gta.toml
+pointage/*.db
+pointage/*.db-*
+pointage/*.xlsx
+__pycache__/
